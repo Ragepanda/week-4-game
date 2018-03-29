@@ -16,20 +16,20 @@ var playerObject;
 var playerHP;
 var playerAtk;
 var opponentHP;
-// Choose character 
+ 
+
+// click even for selecting your character
 $("body").on("click", ".choose", function () {
-    //clear enemy divs
+    
+    //We grab the name of the chosen character and then wipe the character divs away
     characterName = $(this).attr("name");
     $("#character-selection").empty();
 
 
-
-
-
-    for (var i = 0; i < combatants.length; i++) {
-        if (combatants[i].name === characterName) {  //put character into #player-character
-            playerObject = combatants[i];
-            var player =
+    for (var i = 0; i < combatants.length; i++) {      // Loops through object array
+        if (combatants[i].name === characterName) {  //put character into #player-character if name of grabbed attribute is the object's name value
+            playerObject = combatants[i];            //Store the player object for more flexible use
+            var player =                               // format html with charater object elements
                 `<h2>Your Character</h2>
                  <div class="col-xs-5"> </div>
                  <div class="col-xs-2 player" name="${playerObject.name}"> 
@@ -39,15 +39,15 @@ $("body").on("click", ".choose", function () {
                 </div>
                 <div class="col-xs-5"> </div>`;
 
-            $("#player-character").html(player);
+            $("#player-character").html(player);        // Uploads a character block to the "Your Character" section
 
-            playerHP = playerObject.hp;
+            playerHP = playerObject.hp;                 // stores adjustable hp/attack scroes for player character
             playerAtk = playerObject.attack;
         }
 
         else {                                        //put enemy profiles into the enemies div 
-            enemyObjects.push(combatants[i]);
-            enemyHTML +=
+            enemyObjects.push(combatants[i]);         //Will store enemy objects in their own array to be removed each time they're selected for combat
+            enemyHTML +=                              // single string of formatted HTML to represent all enemies
                 `               
                 <div class="col-xs-2 enemy" name="${combatants[i].name}"> 
                    <p>${combatants[i].name}</p>
@@ -57,25 +57,24 @@ $("body").on("click", ".choose", function () {
                 `;
         }
     }
-    $("#non-player-character").html(enemyHTML);
+    $("#non-player-character").html(enemyHTML); // Pushes enemies after the loop
 
 
 })
 
 
-// Choose enemy
+// Click event for when selecting an opponent
 $("body").on("click", ".enemy", function () {
-    if (currentlyFighting) {
+    if (currentlyFighting) {  // This boolean checks to see if the player is already fighting, meaning a new opponent cannot be selected until the current one is defeated
         alert("You must finish your current fight before fighting a new opponent");
     }
     else {
             for (var i = 0; i < enemyObjects.length; i++) {
-                if (enemyObjects[i].name === $(this).attr("name")) {
-                    opponentObject = enemyObjects[i];
-                    opponentHP = opponentObject.hp;
-                    console.log(opponentHP);
-                    enemyObjects.splice(i, 1);
-                    $(this).remove();
+                if (enemyObjects[i].name === $(this).attr("name")) { // Checks enemy objects to see which one corresponds to the chosen enemy
+                    opponentObject = enemyObjects[i];   // Stores object representing the opponent 
+                    opponentHP = opponentObject.hp;      // stores hp value  from the object 
+                    enemyObjects.splice(i, 1);  // Remove the chosen opponent from array of enemies
+                    $(this).remove();           // Removes character div from the DOM
                     break;
                 }
             }
@@ -96,48 +95,40 @@ $("body").on("click", ".enemy", function () {
 })
 
 
-// Attack Enemy
+// Attack button event, does math and displays for combat, and determines win/loss conditions
 $("body").on("click", "#attack", function () {
     if (currentlyFighting) {
 
-            opponentHP = opponentHP - playerAtk;         
-            $(".opponent-hp").text(opponentHP);
+            opponentHP = opponentHP - playerAtk;         // Player gets the first hit, so opponent's HP is reduced before win conditions are checked
+            $(".opponent-hp").text(opponentHP);              // Sets DOM to reflect new hp total
 
             if (opponentHP <= 0) {
-                currentlyFighting = false;
-                $(".opponent").remove();
-                if(enemyObjects.length===0){
+                currentlyFighting = false;                 // if opponent is dead we set the currentlyFighting boolean to false to allow for a new enemy to be chosen
+                $(".opponent").remove();                    // Clear div of defeated opponent
+                if(enemyObjects.length===0){               // Because I splice out enemies from this array each time the player fights an enemy, the array size is 0 when all enemies are cleared
                     alert("You Win");
                     reset();
                 }
             }
                      
-            else{
+            else{                                                    // Since the opponent has not fallen, player takes damage, reflected by the DOM
                 playerHP = playerHP - opponentObject.counterAttack;
                 playerAtk = playerAtk + playerObject.attack;
                 $(".player-hp").text(playerHP);
             }
 
-            if(playerHP<=0){
+            if(playerHP<=0){                                          // Now that the player is damaged, we check if they lose
                 for(var i = 0; i<enemyObjects.length; i++)
-                    enemyObjects.splice(0, 1);
+                    enemyObjects.splice(0, 1);                        // empty out enemyObjects so it can be used in the next game
                 alert("You Lose");
-                currentlyFighting = false;
+                currentlyFighting = false;                            // resets boolean condition to allow choosing of enemies to fight
                 reset();
             }
-            console.log(enemyObjects);
-            console.log(`${playerObject.name} is at ${playerHP}, ${opponentObject.name} is at ${opponentHP}`);
+
     }
 })
 
 
-// Reset for when enemy HP is zero or your hp is 0
-
-// Subtract enemy HP
-
-// Subtract your HP
-
-// Increase your attack power
 
 
 function reset(){           // Function to restore page to it's base state
