@@ -1,0 +1,51 @@
+.choose, .player{
+    border: 5px solid green;
+    margin-left: 10px;
+    background-color: white;
+}
+
+
+.enemy{
+    border: 5px solid red;
+    margin-left: 10px;
+    background-color: white;
+}
+
+.opaque{
+    opacity: 50%;
+}
+
+.opponent{
+    border: 5px solid purple;
+    margin-left: 10px;
+    background-color: white;
+}
+
+body{
+    background-image: url("../images/background.jpg");
+    background-color: rgb(128, 128, 128, .2);
+}
+
+h1, h2{
+    color: black;
+    
+}
+
+.container{
+    background-color: rgb(128, 128, 128, .2);
+    margin-top: 100px;
+    margin-bottom: 100px;
+    
+}
+h1{
+    font-size: 450%;
+}
+
+h2{
+    font-size: 350%;
+}
+
+#attack{
+    margin-top:10px;
+    margin-bottom: 150px;
+}
